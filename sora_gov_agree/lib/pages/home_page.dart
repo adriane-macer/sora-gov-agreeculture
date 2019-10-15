@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sora_gov_agree/pages/crop_prices_page.dart';
 import 'package:sora_gov_agree/pages/harvest_page.dart';
+import 'package:sora_gov_agree/pages/help_page.dart';
 import 'package:sora_gov_agree/pages/plants_page.dart';
 
 class _DrawerItem {
@@ -33,7 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _drawerSelectedIndex = 0;
-  String title = "Home";
+  String title;
 
   _getDrawerItemWidget(int pos) {
     switch (pos) {
@@ -41,9 +43,18 @@ class _HomePageState extends State<HomePage> {
         return PlantsPage();
       case 1:
         return HarvestPage();
+      case 2:
+        return CropPricesPage();
+      case 3: return HelpPage();
       default:
         return Center(child: new Text("Not yet available"));
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    title = "${widget.drawerItems[0].title}";
   }
 
   _onSelectItem(int index) {
