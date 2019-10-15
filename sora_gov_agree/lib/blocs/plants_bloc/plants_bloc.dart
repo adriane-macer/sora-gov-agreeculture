@@ -9,6 +9,13 @@ class PlantsBloc extends Bloc<PlantsEvent, PlantsState> {
 
   @override
   Stream<PlantsState> mapEventToState(PlantsEvent event) async* {
-    //TODO implement code
+    if(event is FetchPlants) {
+      yield PlantsLoading();
+      //TODO implement code
+      await Future.delayed(Duration(seconds: 3));
+      yield PlantsLoaded();
+    }
   }
 }
+
+

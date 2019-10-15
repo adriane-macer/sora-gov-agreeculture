@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sora_gov_agree/pages/crop_prices_page.dart';
-import 'package:sora_gov_agree/pages/harvest_page.dart';
-import 'package:sora_gov_agree/pages/help_page.dart';
-import 'package:sora_gov_agree/pages/plants_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_bloc.dart';
+import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_event.dart';
+import 'package:sora_gov_agree/blocs/harvest_bloc/harvest_bloc.dart';
+import 'package:sora_gov_agree/blocs/harvest_bloc/harvest_event.dart';
+import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_bloc.dart';
+import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_event.dart';
+import 'package:sora_gov_agree/blocs/plants_bloc/plants_bloc.dart';
+import 'package:sora_gov_agree/blocs/plants_bloc/plants_event.dart';
+import 'package:sora_gov_agree/pages/crop_prices_page/crop_prices_page.dart';
+import 'package:sora_gov_agree/pages/harvest_page/harvest_page.dart';
+import 'package:sora_gov_agree/pages/help_page/help_page.dart';
+import 'package:sora_gov_agree/pages/my_farm_page/my_farm_page.dart';
+import 'package:sora_gov_agree/pages/plants_page/plants_page.dart';
 
 class _DrawerItem {
   IconData icon;
@@ -17,10 +27,8 @@ class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
   final drawerItems = [
-    _DrawerItem(
-      Icons.local_florist,
-      "My plants",
-    ),
+    _DrawerItem(Icons.home, "My Farm"),
+    _DrawerItem(Icons.local_florist, "My plants"),
     _DrawerItem(Icons.restaurant, "My Harvest"),
     _DrawerItem(Icons.attach_money, "Crop Prices"),
     _DrawerItem(Icons.help_outline, "Help"),
@@ -40,12 +48,31 @@ class _HomePageState extends State<HomePage> {
   _getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
-        return PlantsPage();
+        return BlocProvider<MyFarmBloc>(
+            builder: (context) =>
+            MyFarmBloc()
+              ..dispatch(FetchMyFarm()),
+            child: MyFarmPage());
       case 1:
-        return HarvestPage();
+        return BlocProvider<PlantsBloc>(
+            builder: (context) =>
+            PlantsBloc()
+              ..dispatch(FetchPlants()),
+            child: PlantsPage());
       case 2:
-        return CropPricesPage();
-      case 3: return HelpPage();
+        return BlocProvider<HarvestBloc>(
+            builder: (context) =>
+            HarvestBloc()
+              ..dispatch(FetchHarvest()),
+            child: HarvestPage());
+      case 3:
+        return BlocProvider<CropPricesBloc>(
+            builder: (context) =>
+            CropPricesBloc()
+              ..dispatch(FetchCropPrices()),
+            child: CropPricesPage());
+      case 4:
+        return HelpPage();
       default:
         return Center(child: new Text("Not yet available"));
     }
