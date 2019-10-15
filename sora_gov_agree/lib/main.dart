@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sora_gov_agree/pages/home_page.dart';
+import 'package:sora_gov_agree/pages/home_page/home_page.dart';
 
 void main() => runApp(MyApp());
 
