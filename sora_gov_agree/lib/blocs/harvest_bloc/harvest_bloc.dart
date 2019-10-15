@@ -9,11 +9,6 @@ class HarvestBloc extends Bloc<HarvestEvent, HarvestState> {
 
   @override
   Stream<HarvestState> mapEventToState(HarvestEvent event) async* {
-    if(event is FetchHarvest) {
-      yield HarvestLoading();
-      //TODO implement code
-      await Future.delayed((Duration(seconds: 3)));
-      yield HarvestLoaded();
-    }
+    //TODO implement code
   }
 }

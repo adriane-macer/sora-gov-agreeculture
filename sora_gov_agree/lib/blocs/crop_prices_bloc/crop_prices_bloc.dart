@@ -9,11 +9,6 @@ class CropPricesBloc extends Bloc<CropPricesEvent, CropPricesState> {
 
   @override
   Stream<CropPricesState> mapEventToState(CropPricesEvent event) async* {
-    if (event is FetchCropPrices) {
-      yield CropPricesLoading();
-      //TODO implement code
-      await Future.delayed((Duration(seconds: 3)));
-      yield CropPricesLoaded();
-    }
+    //TODO implement code
   }
 }
