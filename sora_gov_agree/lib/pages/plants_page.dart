@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 class PlantsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+
+        },
+      ),
     );
   }
 }
