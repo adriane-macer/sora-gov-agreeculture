@@ -34,11 +34,11 @@ class PlantsService {
           'PlantsService.getData:  Error requesting Plants data: $e');
     }
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       try {
-        return (json.decode(response.body) as List)
-            .map((data) => Crop.fromJson(data))
-            .toList();
+        var body = response.data;
+        return (body as List).map((data) => Crop.fromJson(data)).toList();
+
       } catch (e) {
         print(e);
         throw Exception("PlantsService.getData: $e");

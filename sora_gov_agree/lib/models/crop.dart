@@ -77,7 +77,7 @@ class Crop {
     this.updatedAt,
   });
 
-  factory Crop.fromJson(String str) => Crop.fromMap(json.decode(str));
+  factory Crop.fromJson(Map<String, dynamic> json) => Crop.fromMap(json);
 
   String toJson() => json.encode(toMap());
 
@@ -118,7 +118,7 @@ class Crop {
         updatedAt: DateTime.parse(json["updated_at"]),
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<dynamic, dynamic> toMap() => {
         "id": id,
         "impressions_count": impressionsCount,
         "country_id": countryId,

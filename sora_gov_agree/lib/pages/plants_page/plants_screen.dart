@@ -17,7 +17,7 @@ class PlantsScreen extends StatelessWidget {
               title: Text(
                 "${_crops[index].name}",
               ),
-              subtitle: Text("${_crops[index].featured}"),
+              subtitle: Text("${_crops[index].measure}"),
             ),
           ),
         );
