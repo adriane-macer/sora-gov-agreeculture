@@ -4,6 +4,8 @@ import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_bloc.dart';
 import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_event.dart';
 import 'package:sora_gov_agree/blocs/harvest_bloc/harvest_bloc.dart';
 import 'package:sora_gov_agree/blocs/harvest_bloc/harvest_event.dart';
+import 'package:sora_gov_agree/blocs/help_bloc/help_bloc.dart';
+import 'package:sora_gov_agree/blocs/help_bloc/help_event.dart';
 import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_bloc.dart';
 import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_event.dart';
 import 'package:sora_gov_agree/blocs/plants_bloc/plants_bloc.dart';
@@ -49,30 +51,24 @@ class _HomePageState extends State<HomePage> {
     switch (pos) {
       case 0:
         return BlocProvider<MyFarmBloc>(
-            builder: (context) =>
-            MyFarmBloc()
-              ..dispatch(FetchMyFarm()),
+            builder: (context) => MyFarmBloc()..dispatch(FetchMyFarm()),
             child: MyFarmPage());
       case 1:
         return BlocProvider<PlantsBloc>(
-            builder: (context) =>
-            PlantsBloc()
-              ..dispatch(FetchPlants()),
+            builder: (context) => PlantsBloc()..dispatch(FetchPlants()),
             child: PlantsPage());
       case 2:
         return BlocProvider<HarvestBloc>(
-            builder: (context) =>
-            HarvestBloc()
-              ..dispatch(FetchHarvest()),
+            builder: (context) => HarvestBloc()..dispatch(FetchHarvest()),
             child: HarvestPage());
       case 3:
         return BlocProvider<CropPricesBloc>(
-            builder: (context) =>
-            CropPricesBloc()
-              ..dispatch(FetchCropPrices()),
+            builder: (context) => CropPricesBloc()..dispatch(FetchCropPrices()),
             child: CropPricesPage());
       case 4:
-        return HelpPage();
+        return BlocProvider<HelpBloc>(
+            builder: (context) => HelpBloc()..dispatch(FetchHelp()),
+            child: HelpPage());
       default:
         return Center(child: new Text("Not yet available"));
     }
