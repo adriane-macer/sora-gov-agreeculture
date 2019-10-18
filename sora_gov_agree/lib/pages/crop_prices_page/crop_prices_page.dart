@@ -21,7 +21,7 @@ class CropPricesPage extends StatelessWidget {
           }
         if(state is NoCropPricesLoaded)
           {
-            return Scaffold(body: Text("No CropPrices Loaded"));
+            return Scaffold(body: Text("No Data"));
           }
         return Container();
       },

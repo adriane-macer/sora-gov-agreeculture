@@ -21,7 +21,7 @@ class PlantsPage extends StatelessWidget {
           }
         if(state is NoPlantsLoaded)
           {
-            return Scaffold(body: Text("No Plants Loaded"));
+            return Scaffold(body: Text("No Data"));
           }
         return Container();
       },

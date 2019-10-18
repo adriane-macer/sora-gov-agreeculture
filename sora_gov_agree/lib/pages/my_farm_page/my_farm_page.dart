@@ -24,7 +24,7 @@ class MyFarmPage extends StatelessWidget {
           }
         if(state is NoMyFarmLoaded)
           {
-            return Scaffold(body: Text( "No item"));
+            return Scaffold(body: Text( "No Data"));
           }
         return Container();
       },

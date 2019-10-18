@@ -19,7 +19,7 @@ class HarvestPage extends StatelessWidget {
           return Scaffold(body: Text("Something went wrong"));
         }
         if (state is NoHarvestLoaded) {
-          return Scaffold(body: Text("No Harvest Loaded"));
+          return Scaffold(body: Text("No Data"));
         }
         return Container();
       },

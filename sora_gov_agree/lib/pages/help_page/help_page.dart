@@ -19,7 +19,7 @@ class HelpPage extends StatelessWidget {
           return Scaffold(body: Text("Something went wrong"));
         }
         if (state is NoHelpLoaded) {
-          return Scaffold(body: Text("No Help Loaded"));
+          return Scaffold(body: Text("No Data"));
         }
         return Container();
       },
