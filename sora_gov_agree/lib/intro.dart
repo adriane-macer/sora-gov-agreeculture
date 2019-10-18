@@ -60,7 +60,7 @@ class IntroState extends State<Intro> {
   }
 
   void onDonePress() {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
     );
