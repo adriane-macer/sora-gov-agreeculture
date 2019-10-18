@@ -7,6 +7,7 @@ class DbConstants {
   static const TEXT = "TEXT";
   static const AUTO_INCREMENT = "AUTO INCREMENT";
   static const PRIMARY_KEY = "PRIMARY KEY";
+  static const PRIMARY_KEY_AUTO_INCREMENT = "$PRIMARY_KEY $AUTO_INCREMENT";
 
 
   //Category Table

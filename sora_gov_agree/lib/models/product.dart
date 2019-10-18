@@ -4,7 +4,46 @@ part 'product.g.dart';
 
 @JsonSerializable()
 class Product {
-  final int category;
+  Product(
+      {this.categoryId,
+      this.subcategoryId,
+      this.userId,
+      this.orgId,
+      this.groupId,
+      this.reference,
+      this.status,
+      this.kind,
+      this.userPic,
+      this.userName,
+      this.name,
+      this.nameEn,
+      this.nameLocal,
+      this.photo,
+      this.address,
+      this.latitude,
+      this.longitude,
+      this.province,
+      this.city,
+      this.district,
+      this.shortDescription,
+      this.shortDescriptionEn,
+      this.link,
+      this.sustainabilityRating,
+      this.impressionsCount,
+      this.terms,
+      this.measure,
+      this.paymentClass,
+      this.currency,
+      this.currencyPrice,
+      this.maximumPrice,
+      this.minimumPrice,
+      this.quantity,
+      this.urgency,
+      this.createdAt,
+      this.updatedAt});
+
+  @JsonKey(name: "category_id")
+  final int categoryId;
   @JsonKey(name: "subcategory_id")
   final int subcategoryId;
   @JsonKey(name: "user_id")
@@ -20,6 +59,7 @@ class Product {
   final String userPic;
   @JsonKey(name: "user_name")
   final String userName;
+  final String name;
   @JsonKey(name: "name_en")
   final String nameEn;
   @JsonKey(name: "name_local")
@@ -51,64 +91,12 @@ class Product {
   final double maximumPrice;
   @JsonKey(name: "minimum_price")
   final double minimumPrice;
-  final String state;
-  final bool featured;
+  final double quantity;
+  final int urgency;
   @JsonKey(name: "created_at")
   final DateTime createdAt;
   @JsonKey(name: "updated_at")
   final DateTime updatedAt;
-  @JsonKey(name: "deleted_at")
-  final DateTime deletedAt;
-  final int gender;
-  final String email;
-  final String mobile;
-  final String provider;
-  final String uid;
-  final int logistics;
-
-  Product(
-      {this.category,
-      this.subcategoryId,
-      this.userId,
-      this.orgId,
-      this.groupId,
-      this.reference,
-      this.status,
-      this.kind,
-      this.userPic,
-      this.userName,
-      this.nameEn,
-      this.nameLocal,
-      this.photo,
-      this.address,
-      this.latitude,
-      this.longitude,
-      this.province,
-      this.city,
-      this.district,
-      this.shortDescription,
-      this.shortDescriptionEn,
-      this.link,
-      this.sustainabilityRating,
-      this.impressionsCount,
-      this.terms,
-      this.measure,
-      this.paymentClass,
-      this.currency,
-      this.currencyPrice,
-      this.maximumPrice,
-      this.minimumPrice,
-      this.state,
-      this.featured,
-      this.createdAt,
-      this.updatedAt,
-      this.deletedAt,
-      this.gender,
-      this.email,
-      this.mobile,
-      this.provider,
-      this.uid,
-      this.logistics});
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);

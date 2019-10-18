@@ -9,61 +9,64 @@ class DbHelper {
   static const _DB_FILENAME = "SoraAgree.db";
   static const _DATABASE_VERSION = 1;
 
-  static const table = 'my_table';
-
   static final columnId = '_id';
   static final columnName = 'name';
   static final columnAge = 'age';
 
-  static const CATEGORY = "category";
-  static const SUB_CATEGORY_ID = "subcategoryId";
-  static const USER_ID = "userId";
-  static const ORG_ID = "orgId";
-  static const GROUP_ID = "groupId";
-  static const REFERENCE = "reference";
-  static const STATUS = "status";
-  static const KIND = "kind";
-  static const USER_PIC = "userPic";
-  static const USER_NAME = "userName";
-  static const NAME_EN = "nameEn";
-  static const NAME_LOCAL = "nameLocal";
-  static const PHOTO = "photo";
-  static const ADDRESS = "address";
-  static const LATITUDE = "latitude";
-  static const LONGITUDE = "longitude";
-  static const PROVINCE = "province";
-  static const CITY = "city";
-  static const DISTRICT = "district";
-  static const SHORT_DESCRIPTION = "shortDescription";
-  static const SHORT_DESCRIPTION_EN = "shortDescriptionEn";
-  static const LINK = "link";
-  static const SUSTAINABILITY_RATING = "sustainabilityRating";
-  static const IMPRESSIONS_COUNT = "impressionsCount";
-  static const TERMS = "terms";
-  static const MEASURE = "measure";
-  static const PAYMENT_CLASS = "paymentClass";
-  static const CURRENCY = "currency";
-  static const CURRENCY_PRICE = "currencyPrice";
-  static const MAXIMUM_PRICE = "maximumPrice";
-  static const MINIMUM_PRICE = "minimumPrice";
-  static const STATE = "state";
-  static const FEATURED = "featured";
-  static const CREATED_AT = "createdAt";
-  static const UPDATED_AT = "updatedAt";
-  static const DELETED_AT = "deletedAt";
-  static const GENDER = "gender";
-  static const EMAIL = "email";
-  static const MOBILE = "mobile";
-  static const PROVIDER = "provider";
-  static const UID = "uid";
-  static const LOGISTICS = "logistics";
+  static const COL_CATEGORY_ID = "categoryId";
+  static const COL_SUBCATEGORY_ID = "subcategoryId";
+  static const COL_USER_ID = "userId";
+  static const COL_ORG_ID = "orgId";
+  static const COL_GROUP_ID = "groupId";
+  static const COL_REFERENCE = "reference";
+  static const COL_STATUS = "status";
+  static const COL_KIND = "kind";
+  static const COL_USER_PIC = "userPic";
+  static const COL_USER_NAME = "userName";
+  static const COL_NAME = "name";
+  static const COL_NAME_EN = "nameEn";
+  static const COL_NAME_LOCAL = "nameLocal";
+  static const COL_PHOTO = "photo";
+  static const COL_ADDRESS = "address";
+  static const COL_LATITUDE = "latitude";
+  static const COL_LONGITUDE = "longitude";
+  static const COL_PROVINCE = "province";
+  static const COL_CITY = "city";
+  static const COL_DISTRICT = "district";
+  static const COL_SHORT_DESCRIPTION = "shortDescription";
+  static const COL_SHORT_DESCRIPTION_EN = "shortDescriptionEn";
+  static const COL_LINK = "link";
+  static const COL_SUSTAINABILITY_RATING = "sustainabilityRating";
+  static const COL_IMPRESSIONS_COUNT = "impressionsCount";
+  static const COL_TERMS = "terms";
+  static const COL_MEASURE = "measure";
+  static const COL_PAYMENT_CLASS = "paymentClass";
+  static const COL_CURRENCY = "currency";
+  static const COL_CURRENCY_PRICE = "currencyPrice";
+  static const COL_MAXIMUM_PRICE = "maximumPrice";
+  static const COL_MINIMUM_PRICE = "minimumPrice";
+  static const COL_QUANTITY = "quantity";
+  static const COL_URGENCY = "urgency";
+  static const COL_STATE = "state";
+  static const COL_FEATURED = "featured";
+  static const COL_CREATED_AT = "createdAt";
+  static const COL_UPDATED_AT = "updatedAt";
+  static const COL_DELETED_AT = "deletedAt";
+  static const COL_GENDER = "gender";
+  static const COL_EMAIL = "email";
+  static const COL_MOBILE = "mobile";
+  static const COL_PROVIDER = "provider";
+  static const COL_UID = "uid";
+  static const COL_LOGISTICS = "logistics";
 
   var databasesPath;
   String path;
   Database _db;
   final _lock = new Lock();
 
-  DbHelper._privateConstructor();
+  DbHelper._privateConstructor() {
+    _initializeDb();
+  }
 
   static final DbHelper instance = DbHelper._privateConstructor();
 
@@ -116,8 +119,8 @@ class DbHelper {
   _createCategoryTable(Database db, int version) async {
     await db.execute("""
         CREATE TABLE ${DbConstants.CATEGORY_TABLE}
-         (id INTEGER PRIMARY KEY, ${DbConstants.NAME} TEXT,
-         ${DbConstants.SYMBOL} TEXT)
+         (id INTEGER PRIMARY KEY, ${DbConstants.NAME} ${DbConstants.TEXT},
+         ${DbConstants.SYMBOL} ${DbConstants.TEXT})
          """);
   }
 
@@ -125,60 +128,55 @@ class DbHelper {
     await db.execute("""
         CREATE TABLE ${DbConstants.SUB_CATEGORY_TABLE}
          (id INTEGER PRIMARY KEY, 
-         ${DbConstants.NAME} TEXT,
-         ${DbConstants.SYMBOL} TEXT)
+         ${DbConstants.NAME} ${DbConstants.TEXT},
+         ${DbConstants.SYMBOL} ${DbConstants.TEXT})
          """);
   }
 
   // Product table
-  //create product table
+  //create product table. This table includes services
   _createProductTable(Database db, int version) async {
     await db.execute("""
         CREATE TABLE ${DbConstants.PRODUCT_TABLE}
-         (id INTEGER PRIMARY KEY AUTO INCREMENT, 
-      $CATEGORY TEXT,
-  $SUB_CATEGORY_ID INTEGER,
-  $USER_ID INTEGER,
-  $ORG_ID INTEGER,
-  $GROUP_ID INTEGER,
-  $REFERENCE INTEGER,
-  $STATUS TEXT,
-  $KIND TEXT,
-  $USER_PIC TEXT,
-  $USER_NAME TEXT,
-  $NAME_EN TEXT,
-  $NAME_LOCAL TEXT,
-  $PHOTO TEXT,
-  $ADDRESS TEXT,
-  $LATITUDE TEXT,
-  $LONGITUDE TEXT,
-  $PROVINCE TEXT,
-  $CITY TEXT,
-  $DISTRICT TEXT,
-  $SHORT_DESCRIPTION TEXT,
-  $SHORT_DESCRIPTION_EN TEXT,
-  $LINK TEXT,
-  $SUSTAINABILITY_RATING TEXT,
-  $IMPRESSIONS_COUNT TEXT,
-  $TERMS TEXT,
-  $MEASURE TEXT,
-  $PAYMENT_CLASS TEXT,
-  $CURRENCY TEXT,
-  $CURRENCY_PRICE TEXT,
-  $MAXIMUM_PRICE TEXT,
-  $MINIMUM_PRICE TEXT,
-  $STATE TEXT,
-  $FEATURED TEXT,
-  $CREATED_AT TEXT,
-  $UPDATED_AT TEXT,
-  $DELETED_AT TEXT,
-  $GENDER TEXT,
-  $EMAIL TEXT,
-  $MOBILE TEXT,
-  $PROVIDER TEXT,
-  $UID TEXT,
-  $LOGISTICS TEXT,
-         )
-         """);
+         (
+         ${DbConstants.ID} ${DbConstants.INTEGER} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
+    $COL_CATEGORY_ID ${DbConstants.INTEGER},
+    $COL_SUBCATEGORY_ID ${DbConstants.INTEGER},
+    $COL_USER_ID ${DbConstants.INTEGER},
+    $COL_ORG_ID ${DbConstants.INTEGER},
+    $COL_GROUP_ID ${DbConstants.INTEGER},
+    $COL_REFERENCE ${DbConstants.TEXT},
+    $COL_STATUS ${DbConstants.TEXT},
+    $COL_KIND ${DbConstants.TEXT},
+    $COL_USER_PIC ${DbConstants.TEXT},
+    $COL_USER_NAME ${DbConstants.TEXT},
+    $COL_NAME ${DbConstants.TEXT},
+    $COL_NAME_EN ${DbConstants.TEXT},
+    $COL_NAME_LOCAL ${DbConstants.TEXT},
+    $COL_PHOTO ${DbConstants.TEXT},
+    $COL_ADDRESS ${DbConstants.TEXT},
+    $COL_LATITUDE ${DbConstants.TEXT},
+    $COL_LONGITUDE ${DbConstants.TEXT},
+    $COL_PROVINCE ${DbConstants.TEXT},
+    $COL_CITY ${DbConstants.TEXT},
+    $COL_DISTRICT ${DbConstants.TEXT},
+    $COL_SHORT_DESCRIPTION ${DbConstants.TEXT},
+    $COL_SHORT_DESCRIPTION_EN ${DbConstants.TEXT},
+    $COL_LINK ${DbConstants.TEXT},
+    $COL_SUSTAINABILITY_RATING ${DbConstants.TEXT},
+    $COL_IMPRESSIONS_COUNT ${DbConstants.TEXT},
+    $COL_TERMS ${DbConstants.TEXT},
+    $COL_MEASURE ${DbConstants.TEXT},
+    $COL_PAYMENT_CLASS ${DbConstants.TEXT},
+    $COL_CURRENCY ${DbConstants.TEXT},
+    $COL_CURRENCY_PRICE ${DbConstants.TEXT},
+    $COL_MAXIMUM_PRICE ${DbConstants.TEXT},
+    $COL_MINIMUM_PRICE ${DbConstants.TEXT},
+    $COL_QUANTITY ${DbConstants.TEXT},
+    $COL_URGENCY ${DbConstants.TEXT},
+    $COL_CREATED_AT ${DbConstants.TEXT},
+    $COL_UPDATED_AT ${DbConstants.TEXT}
+    )
+    """);
   }
 }

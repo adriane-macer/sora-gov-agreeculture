@@ -8,7 +8,7 @@ part of 'product.dart';
 
 Product _$ProductFromJson(Map<String, dynamic> json) {
   return Product(
-    category: json['category'] as int,
+    categoryId: json['category_id'] as int,
     subcategoryId: json['subcategory_id'] as int,
     userId: json['user_id'] as int,
     orgId: json['org_id'] as int,
@@ -18,6 +18,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     kind: json['kind'] as int,
     userPic: json['user_pic'] as String,
     userName: json['user_name'] as String,
+    name: json['name'] as String,
     nameEn: json['name_en'] as String,
     nameLocal: json['name_local'] as String,
     photo: json['photo'] as String,
@@ -39,28 +40,19 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     currencyPrice: (json['currency_price'] as num)?.toDouble(),
     maximumPrice: (json['maximum_price'] as num)?.toDouble(),
     minimumPrice: (json['minimum_price'] as num)?.toDouble(),
-    state: json['state'] as String,
-    featured: json['featured'] as bool,
+    quantity: (json['quantity'] as num)?.toDouble(),
+    urgency: json['urgency'] as int,
     createdAt: json['created_at'] == null
         ? null
         : DateTime.parse(json['created_at'] as String),
     updatedAt: json['updated_at'] == null
         ? null
         : DateTime.parse(json['updated_at'] as String),
-    deletedAt: json['deleted_at'] == null
-        ? null
-        : DateTime.parse(json['deleted_at'] as String),
-    gender: json['gender'] as int,
-    email: json['email'] as String,
-    mobile: json['mobile'] as String,
-    provider: json['provider'] as String,
-    uid: json['uid'] as String,
-    logistics: json['logistics'] as int,
   );
 }
 
 Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
-      'category': instance.category,
+      'category_id': instance.categoryId,
       'subcategory_id': instance.subcategoryId,
       'user_id': instance.userId,
       'org_id': instance.orgId,
@@ -70,6 +62,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'kind': instance.kind,
       'user_pic': instance.userPic,
       'user_name': instance.userName,
+      'name': instance.name,
       'name_en': instance.nameEn,
       'name_local': instance.nameLocal,
       'photo': instance.photo,
@@ -91,15 +84,8 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'currency_price': instance.currencyPrice,
       'maximum_price': instance.maximumPrice,
       'minimum_price': instance.minimumPrice,
-      'state': instance.state,
-      'featured': instance.featured,
+      'quantity': instance.quantity,
+      'urgency': instance.urgency,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
-      'deleted_at': instance.deletedAt?.toIso8601String(),
-      'gender': instance.gender,
-      'email': instance.email,
-      'mobile': instance.mobile,
-      'provider': instance.provider,
-      'uid': instance.uid,
-      'logistics': instance.logistics,
     };
