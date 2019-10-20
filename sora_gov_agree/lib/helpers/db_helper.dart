@@ -138,7 +138,7 @@ class DbHelper {
          (
          ${DbConstants.ID} ${DbConstants.INTEGER_PRIMARY_KEY_AUTO_INCREMENT}, 
          ${DbConstants.NAME} ${DbConstants.TEXT},
-         ${DbConstants.SYMBOL} ${DbConstants.TEXT}
+         ${DbConstants.SYMBOL} ${DbConstants.TEXT},
          $COL_CATEGORY_ID ${DbConstants.INTEGER}
          )
          """);
@@ -201,7 +201,7 @@ class DbHelper {
     return await batch.commit();
   }
 
-  insertSubCategory(Database db,
+  insertSubcategory(Database db,
       {@required String name,
       @required String symbol,
       @required int categoryId}) async {
@@ -209,7 +209,7 @@ class DbHelper {
     batch.insert(DbConstants.SUB_CATEGORY_TABLE, {
       COL_NAME: name,
       COL_SYMBOL: symbol,
-      COL_SUBCATEGORY_ID: categoryId,
+      COL_CATEGORY_ID: categoryId,
     });
     return await batch.commit();
   }
@@ -309,9 +309,19 @@ class DbHelper {
 
   Future<List<Map>> getCategories(Database db) async {
     return await db.transaction((txn) async {
-
-      final result =  await txn.rawQuery('SELECT * FROM ${DbConstants.CATEGORY_TABLE}');
+      final result =
+          await txn.rawQuery('SELECT * FROM ${DbConstants.CATEGORY_TABLE}');
       print(result);
+      return result;
+    });
+  }
+
+  Future<List<Map>> getLocalData(Database db,
+      {String name, String symbol, int categoryId}) async {
+    return await db.transaction((txn) async {
+      final result = await txn.rawQuery(
+          'SELECT * FROM ${DbConstants.SUB_CATEGORY_TABLE} WHERE $COL_CATEGORY_ID IN (?)',
+          [categoryId]);
       return result;
     });
   }

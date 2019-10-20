@@ -4,6 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:sora_gov_agree/blocs/category_bloc/category_bloc.dart';
 import 'package:sora_gov_agree/blocs/category_bloc/category_event.dart';
+import 'package:sora_gov_agree/blocs/subcategory_bloc/subcategory_bloc.dart';
+import 'package:sora_gov_agree/blocs/subcategory_bloc/subcategory_event.dart';
 import 'package:sora_gov_agree/models/category.dart';
 import 'package:sora_gov_agree/pages/category_page/category_edit_screen.dart';
 import 'package:sora_gov_agree/services/category_service.dart';
@@ -29,10 +31,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return Provider<Category>.value(
-                        value: categories[index],
-                        child: CategoryEditScreen(),
-                      );
+                      return MultiProvider(providers: [
+                        Provider<Category>.value(value: categories[index]),
+                        BlocProvider<SubcategoryBloc>(
+                          builder: (context) =>
+                              SubcategoryBloc()..dispatch(FetchSubcategory()),
+                        )
+                      ], child: CategoryEditScreen());
                     },
                   ),
                 );
