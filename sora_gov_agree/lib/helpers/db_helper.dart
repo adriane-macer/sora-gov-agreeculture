@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:sora_gov_agree/helpers/db_constants.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -58,6 +58,8 @@ class DbHelper {
   static const COL_PROVIDER = "provider";
   static const COL_UID = "uid";
   static const COL_LOGISTICS = "logistics";
+
+  static const COL_SYMBOL = "symbol";
 
   var databasesPath;
   String path;
@@ -119,8 +121,11 @@ class DbHelper {
   _createCategoryTable(Database db, int version) async {
     await db.execute("""
         CREATE TABLE ${DbConstants.CATEGORY_TABLE}
-         (id INTEGER PRIMARY KEY, ${DbConstants.NAME} ${DbConstants.TEXT},
-         ${DbConstants.SYMBOL} ${DbConstants.TEXT})
+         (
+          ${DbConstants.ID} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
+          ${DbConstants.NAME} ${DbConstants.TEXT},
+          ${DbConstants.SYMBOL} ${DbConstants.TEXT}
+         )
          """);
   }
 
@@ -130,6 +135,7 @@ class DbHelper {
          (id INTEGER PRIMARY KEY, 
          ${DbConstants.NAME} ${DbConstants.TEXT},
          ${DbConstants.SYMBOL} ${DbConstants.TEXT})
+         $COL_SUBCATEGORY_ID ${DbConstants.INTEGER}
          """);
   }
 
@@ -137,46 +143,162 @@ class DbHelper {
   //create product table. This table includes services
   _createProductTable(Database db, int version) async {
     await db.execute("""
-        CREATE TABLE ${DbConstants.PRODUCT_TABLE}
-         (
-         ${DbConstants.ID} ${DbConstants.INTEGER} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
-    $COL_CATEGORY_ID ${DbConstants.INTEGER},
-    $COL_SUBCATEGORY_ID ${DbConstants.INTEGER},
-    $COL_USER_ID ${DbConstants.INTEGER},
-    $COL_ORG_ID ${DbConstants.INTEGER},
-    $COL_GROUP_ID ${DbConstants.INTEGER},
-    $COL_REFERENCE ${DbConstants.TEXT},
-    $COL_STATUS ${DbConstants.TEXT},
-    $COL_KIND ${DbConstants.TEXT},
-    $COL_USER_PIC ${DbConstants.TEXT},
-    $COL_USER_NAME ${DbConstants.TEXT},
-    $COL_NAME ${DbConstants.TEXT},
-    $COL_NAME_EN ${DbConstants.TEXT},
-    $COL_NAME_LOCAL ${DbConstants.TEXT},
-    $COL_PHOTO ${DbConstants.TEXT},
-    $COL_ADDRESS ${DbConstants.TEXT},
-    $COL_LATITUDE ${DbConstants.TEXT},
-    $COL_LONGITUDE ${DbConstants.TEXT},
-    $COL_PROVINCE ${DbConstants.TEXT},
-    $COL_CITY ${DbConstants.TEXT},
-    $COL_DISTRICT ${DbConstants.TEXT},
-    $COL_SHORT_DESCRIPTION ${DbConstants.TEXT},
-    $COL_SHORT_DESCRIPTION_EN ${DbConstants.TEXT},
-    $COL_LINK ${DbConstants.TEXT},
-    $COL_SUSTAINABILITY_RATING ${DbConstants.TEXT},
-    $COL_IMPRESSIONS_COUNT ${DbConstants.TEXT},
-    $COL_TERMS ${DbConstants.TEXT},
-    $COL_MEASURE ${DbConstants.TEXT},
-    $COL_PAYMENT_CLASS ${DbConstants.TEXT},
-    $COL_CURRENCY ${DbConstants.TEXT},
-    $COL_CURRENCY_PRICE ${DbConstants.TEXT},
-    $COL_MAXIMUM_PRICE ${DbConstants.TEXT},
-    $COL_MINIMUM_PRICE ${DbConstants.TEXT},
-    $COL_QUANTITY ${DbConstants.TEXT},
-    $COL_URGENCY ${DbConstants.TEXT},
-    $COL_CREATED_AT ${DbConstants.TEXT},
-    $COL_UPDATED_AT ${DbConstants.TEXT}
+      CREATE TABLE ${DbConstants.PRODUCT_TABLE}
+       (
+       ${DbConstants.ID} ${DbConstants.INTEGER} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
+      $COL_CATEGORY_ID ${DbConstants.INTEGER},
+      $COL_SUBCATEGORY_ID ${DbConstants.INTEGER},
+      $COL_USER_ID ${DbConstants.INTEGER},
+      $COL_ORG_ID ${DbConstants.INTEGER},
+      $COL_GROUP_ID ${DbConstants.INTEGER},
+      $COL_REFERENCE ${DbConstants.TEXT},
+      $COL_STATUS ${DbConstants.TEXT},
+      $COL_KIND ${DbConstants.TEXT},
+      $COL_USER_PIC ${DbConstants.TEXT},
+      $COL_USER_NAME ${DbConstants.TEXT},
+      $COL_NAME ${DbConstants.TEXT},
+      $COL_NAME_EN ${DbConstants.TEXT},
+      $COL_NAME_LOCAL ${DbConstants.TEXT},
+      $COL_PHOTO ${DbConstants.TEXT},
+      $COL_ADDRESS ${DbConstants.TEXT},
+      $COL_LATITUDE ${DbConstants.REAL},
+      $COL_LONGITUDE ${DbConstants.REAL},
+      $COL_PROVINCE ${DbConstants.TEXT},
+      $COL_CITY ${DbConstants.TEXT},
+      $COL_DISTRICT ${DbConstants.TEXT},
+      $COL_SHORT_DESCRIPTION ${DbConstants.TEXT},
+      $COL_SHORT_DESCRIPTION_EN ${DbConstants.TEXT},
+      $COL_LINK ${DbConstants.TEXT},
+      $COL_SUSTAINABILITY_RATING ${DbConstants.TEXT},
+      $COL_IMPRESSIONS_COUNT ${DbConstants.TEXT},
+      $COL_TERMS ${DbConstants.TEXT},
+      $COL_MEASURE ${DbConstants.TEXT},
+      $COL_PAYMENT_CLASS ${DbConstants.TEXT},
+      $COL_CURRENCY ${DbConstants.TEXT},
+      $COL_CURRENCY_PRICE ${DbConstants.REAL},
+      $COL_MAXIMUM_PRICE ${DbConstants.REAL},
+      $COL_MINIMUM_PRICE ${DbConstants.REAL},
+      $COL_QUANTITY ${DbConstants.REAL},
+      $COL_URGENCY ${DbConstants.TEXT},
+      $COL_CREATED_AT ${DbConstants.TEXT},
+      $COL_UPDATED_AT ${DbConstants.TEXT}
     )
     """);
+  }
+
+  insertCategory(Database db,
+      {@required String name, @required String symbol}) async {
+    Batch batch = db.batch();
+    batch.insert(DbConstants.CATEGORY_TABLE, {
+      COL_NAME: name,
+      COL_SYMBOL: symbol,
+    });
+    return await batch.commit();
+  }
+
+  insertSubCategory(Database db,
+      {@required String name,
+      @required String symbol,
+      @required int categoryId}) async {
+    Batch batch = db.batch();
+    batch.insert(DbConstants.SUB_CATEGORY_TABLE, {
+      COL_NAME: name,
+      COL_SYMBOL: symbol,
+      COL_SUBCATEGORY_ID: categoryId,
+    });
+    return await batch.commit();
+  }
+
+  insertProduct(
+    Database db,
+    String tableName, {
+    @required int categoryId,
+    @required int subcategoryId,
+    int userId,
+    int orgId,
+    int groupId,
+    String reference,
+    String status,
+    String kind,
+    String userPic,
+    String userName,
+    String name,
+    String nameEn,
+    String nameLocal,
+    String photo,
+    String address,
+    double latitude,
+    double longitude,
+    String province,
+    String city,
+    String district,
+    String shortDescription,
+    String shortDescriptionEn,
+    String link,
+    String sustainabilityRating,
+    String impressionsCount,
+    String terms,
+    String measure,
+    String paymentClass,
+    double currency,
+    double currencyPrice,
+    double maximumPrice,
+    double minimumPrice,
+    double quantity,
+    String urgency,
+    String state,
+    String featured,
+    String createdAt,
+    String updatedAt,
+    String deletedAt,
+    String gender,
+    String email,
+    String mobile,
+    String provider,
+    String uid,
+    String logistics,
+  }) async {
+    await db.transaction((txn) async {
+      Batch batch = txn.batch();
+      batch.insert(tableName, {
+        COL_CATEGORY_ID: categoryId,
+        COL_SUBCATEGORY_ID: subcategoryId,
+        COL_USER_ID: userId,
+        COL_ORG_ID: orgId,
+        COL_GROUP_ID: groupId,
+        COL_REFERENCE: reference,
+        COL_STATUS: status,
+        COL_KIND: kind,
+        COL_USER_PIC: userPic,
+        COL_USER_NAME: userName,
+        COL_NAME: name,
+        COL_NAME_EN: nameEn,
+        COL_NAME_LOCAL: nameLocal,
+        COL_PHOTO: photo,
+        COL_ADDRESS: address,
+        COL_LATITUDE: latitude,
+        COL_LONGITUDE: longitude,
+        COL_PROVINCE: province,
+        COL_CITY: city,
+        COL_DISTRICT: district,
+        COL_SHORT_DESCRIPTION: shortDescription,
+        COL_SHORT_DESCRIPTION_EN: shortDescriptionEn,
+        COL_LINK: link,
+        COL_SUSTAINABILITY_RATING: sustainabilityRating,
+        COL_IMPRESSIONS_COUNT: impressionsCount,
+        COL_TERMS: terms,
+        COL_MEASURE: measure,
+        COL_PAYMENT_CLASS: paymentClass,
+        COL_CURRENCY: currency,
+        COL_CURRENCY_PRICE: currencyPrice,
+        COL_MAXIMUM_PRICE: maximumPrice,
+        COL_MINIMUM_PRICE: minimumPrice,
+        COL_QUANTITY: quantity,
+        COL_URGENCY: urgency,
+        COL_CREATED_AT: createdAt,
+        COL_UPDATED_AT: updatedAt,
+      });
+      return await batch.commit();
+    });
   }
 }
