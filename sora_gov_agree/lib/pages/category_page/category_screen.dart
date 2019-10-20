@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:sora_gov_agree/blocs/category_bloc/category_bloc.dart';
+import 'package:sora_gov_agree/blocs/category_bloc/category_event.dart';
 import 'package:sora_gov_agree/models/category.dart';
 import 'package:sora_gov_agree/services/category_service.dart';
 import 'package:sora_gov_agree/services/service_locator.dart';
@@ -30,8 +31,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
         onPressed: () async {
           final Map result = await _addCategoryDialog(context);
           if (result != null) {
-            await locator<CategoryService>()
-                .insertCategory(name: result['name'], symbol: result['symbol']);
+            final bloc = BlocProvider.of<CategoryBloc>(context);
+            bloc.dispatch(AddCategory(result['name'], result['symbol']));
           }
         },
       ),
