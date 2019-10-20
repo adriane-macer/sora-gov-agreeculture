@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sora_gov_agree/blocs/category_bloc/category_bloc.dart';
+import 'package:sora_gov_agree/blocs/category_bloc/category_event.dart';
 import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_bloc.dart';
 import 'package:sora_gov_agree/blocs/crop_prices_bloc/crop_prices_event.dart';
 import 'package:sora_gov_agree/blocs/harvest_bloc/harvest_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_bloc.dart';
 import 'package:sora_gov_agree/blocs/my_farm_bloc/my_farm_event.dart';
 import 'package:sora_gov_agree/blocs/plants_bloc/plants_bloc.dart';
 import 'package:sora_gov_agree/blocs/plants_bloc/plants_event.dart';
+import 'package:sora_gov_agree/pages/category_page/category_page.dart';
 import 'package:sora_gov_agree/pages/crop_prices_page/crop_prices_page.dart';
 import 'package:sora_gov_agree/pages/harvest_page/harvest_page.dart';
 import 'package:sora_gov_agree/pages/help_page/help_page.dart';
@@ -33,6 +36,7 @@ class HomePage extends StatefulWidget {
     _DrawerItem(Icons.local_florist, "My plants"),
     _DrawerItem(Icons.restaurant, "My Harvest"),
     _DrawerItem(Icons.attach_money, "Crop Prices"),
+    _DrawerItem(Icons.collections, "Categories"),
     _DrawerItem(Icons.help_outline, "Help"),
     _DrawerItem(Icons.language, "Tagalog"),
     _DrawerItem(Icons.language, "English"),
@@ -66,6 +70,10 @@ class _HomePageState extends State<HomePage> {
             builder: (context) => CropPricesBloc()..dispatch(FetchCropPrices()),
             child: CropPricesPage());
       case 4:
+        return BlocProvider<CategoryBloc>(
+            builder: (context) => CategoryBloc()..dispatch(FetchCategory()),
+            child: CategoryPage());
+      case 5:
         return BlocProvider<HelpBloc>(
             builder: (context) => HelpBloc()..dispatch(FetchHelp()),
             child: HelpPage());

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sora_gov_agree/helpers/db_constants.dart';
+import 'package:sora_gov_agree/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:synchronized/synchronized.dart';
@@ -81,7 +82,9 @@ class DbHelper {
       await Directory(databasesPath).create(recursive: true);
     } catch (_) {}
 
-    return await openDatabase(path,
+//    await getDb();
+
+    _db = await openDatabase(path,
         version: _DATABASE_VERSION, onCreate: _onCreate);
   }
 
@@ -122,7 +125,7 @@ class DbHelper {
     await db.execute("""
         CREATE TABLE ${DbConstants.CATEGORY_TABLE}
          (
-          ${DbConstants.ID} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
+          ${DbConstants.ID} ${DbConstants.INTEGER_PRIMARY_KEY_AUTO_INCREMENT}, 
           ${DbConstants.NAME} ${DbConstants.TEXT},
           ${DbConstants.SYMBOL} ${DbConstants.TEXT}
          )
@@ -132,10 +135,12 @@ class DbHelper {
   _createSubCategoryTable(Database db, int version) async {
     await db.execute("""
         CREATE TABLE ${DbConstants.SUB_CATEGORY_TABLE}
-         (id INTEGER PRIMARY KEY, 
+         (
+         ${DbConstants.ID} ${DbConstants.INTEGER_PRIMARY_KEY_AUTO_INCREMENT}, 
          ${DbConstants.NAME} ${DbConstants.TEXT},
-         ${DbConstants.SYMBOL} ${DbConstants.TEXT})
-         $COL_SUBCATEGORY_ID ${DbConstants.INTEGER}
+         ${DbConstants.SYMBOL} ${DbConstants.TEXT}
+         $COL_CATEGORY_ID ${DbConstants.INTEGER}
+         )
          """);
   }
 
@@ -145,7 +150,7 @@ class DbHelper {
     await db.execute("""
       CREATE TABLE ${DbConstants.PRODUCT_TABLE}
        (
-       ${DbConstants.ID} ${DbConstants.INTEGER} ${DbConstants.PRIMARY_KEY_AUTO_INCREMENT}, 
+       ${DbConstants.ID} ${DbConstants.INTEGER_PRIMARY_KEY_AUTO_INCREMENT}, 
       $COL_CATEGORY_ID ${DbConstants.INTEGER},
       $COL_SUBCATEGORY_ID ${DbConstants.INTEGER},
       $COL_USER_ID ${DbConstants.INTEGER},
@@ -258,7 +263,7 @@ class DbHelper {
     String uid,
     String logistics,
   }) async {
-    await db.transaction((txn) async {
+    return await db.transaction((txn) async {
       Batch batch = txn.batch();
       batch.insert(tableName, {
         COL_CATEGORY_ID: categoryId,
@@ -299,6 +304,15 @@ class DbHelper {
         COL_UPDATED_AT: updatedAt,
       });
       return await batch.commit();
+    });
+  }
+
+  Future<List<Map>> getCategories(Database db) async {
+    return await db.transaction((txn) async {
+
+      final result =  await txn.rawQuery('SELECT * FROM ${DbConstants.CATEGORY_TABLE}');
+      print(result);
+      return result;
     });
   }
 }
