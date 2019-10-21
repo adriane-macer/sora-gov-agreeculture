@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sora_gov_agree/helpers/db_constants.dart';
-import 'package:sora_gov_agree/models/category.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:synchronized/synchronized.dart';
 
 class DbHelper {
-  static const _DB_FILENAME = "SoraAgree.db";
+  static const _DB_FILENAME = "sora_agreeculture.db";
   static const _DATABASE_VERSION = 1;
 
   static final columnId = '_id';
@@ -74,19 +73,18 @@ class DbHelper {
   static final DbHelper instance = DbHelper._privateConstructor();
 
   Future _initializeDb() async {
+
     databasesPath = await getDatabasesPath();
+    path = join('$databasesPath', '$_DB_FILENAME');
 
     // Make sure the directory exists
     try {
       await Directory(databasesPath).create(recursive: true);
     } catch (_) {}
 
-
-    path = join(databasesPath, '$_DB_FILENAME');
-
     _db = await openDatabase(path,
         version: _DATABASE_VERSION, onCreate: _onCreate);
-    await getDb();
+
   }
 
   _onCreate(Database db, int version) async {
@@ -100,6 +98,10 @@ class DbHelper {
       await _lock.synchronized(() async {
         // Check again once entering the synchronized block
         if (_db == null) {
+          if(path==null){
+            databasesPath = await getDatabasesPath();
+            path = join('$databasesPath', '$_DB_FILENAME');
+          }
           _db = await openDatabase(path);
         }
       });
@@ -312,7 +314,6 @@ class DbHelper {
     return await db.transaction((txn) async {
       final result =
           await txn.rawQuery('SELECT * FROM ${DbConstants.CATEGORY_TABLE}');
-      print(result);
       return result;
     });
   }
