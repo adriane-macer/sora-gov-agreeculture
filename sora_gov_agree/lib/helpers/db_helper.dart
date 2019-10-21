@@ -58,6 +58,8 @@ class DbHelper {
   static const COL_PROVIDER = "provider";
   static const COL_UID = "uid";
   static const COL_LOGISTICS = "logistics";
+  static const COL_BREED_PLANT_DATE = "breedPlantdate";
+  static const COL_TARGET_HARVEST_SELL_DATE = "targetHarvestSellDate";
 
   static const COL_SYMBOL = "symbol";
 
@@ -89,6 +91,34 @@ class DbHelper {
     await _createCategoryTable(db, version);
     await _createSubCategoryTable(db, version);
     await _createProductTable(db, version);
+    //initial list of categories
+    await insertCategory(db, name: "Animal", symbol: "A"); //1
+    await insertCategory(db, name: "Fish", symbol: "F"); //2
+    await insertCategory(db, name: "Grain", symbol: "G"); //3
+    await insertCategory(db, name: "Meat", symbol: "M"); //4
+    await insertCategory(db, name: "Oil", symbol: "O"); //5
+    await insertCategory(db, name: "Plant", symbol: "PL"); //6
+    await insertCategory(db, name: "Veggy", symbol: "V"); //7
+    await insertCategory(db, name: "Fruit", symbol: "FR"); //8
+    await insertCategory(db, name: "Service", symbol: "S"); //9
+    await insertCategory(db, name: "Needed Service", symbol: "NS"); //10
+    //initial list of Subcategories
+    await insertSubcategory(db, name: "Broiler", symbol: "B", categoryId: 1);
+    await insertSubcategory(db, name: "Hog", symbol: "H", categoryId: 1);
+
+    await insertSubcategory(db, name: "Tilapia", symbol: "T", categoryId: 2);
+    await insertSubcategory(db, name: "Bangus", symbol: "BNG", categoryId: 2);
+
+    await insertSubcategory(db, name: "Rice", symbol: "R", categoryId: 3);
+
+    await insertSubcategory(db, name: "Pork", symbol: "P", categoryId: 4);
+
+    await insertSubcategory(db,
+        name: "Coconut oil", symbol: "CO", categoryId: 5);
+
+    await insertSubcategory(db, name: "Brocolli", symbol: "BR", categoryId: 7);
+
+    await insertSubcategory(db, name: "Pineapple", symbol: "PA", categoryId: 8);
   }
 
   Future<Database> getDb() async {
@@ -100,7 +130,8 @@ class DbHelper {
             databasesPath = await getDatabasesPath();
             path = join('$databasesPath', '$_DB_FILENAME');
           }
-          _db = await openDatabase(path);
+          _db = await openDatabase(path,
+              version: _DATABASE_VERSION, onCreate: _onCreate);
         }
       });
     }
@@ -187,7 +218,9 @@ class DbHelper {
       $COL_QUANTITY ${DbConstants.REAL},
       $COL_URGENCY ${DbConstants.TEXT},
       $COL_CREATED_AT ${DbConstants.TEXT},
-      $COL_UPDATED_AT ${DbConstants.TEXT}
+      $COL_UPDATED_AT ${DbConstants.TEXT},
+      $COL_BREED_PLANT_DATE ${DbConstants.TEXT},
+      $COL_TARGET_HARVEST_SELL_DATE ${DbConstants.TEXT}
     )
     """);
   }
@@ -215,54 +248,54 @@ class DbHelper {
     return await batch.commit();
   }
 
-  insertProduct(
-    Database db, {
-    @required int categoryId,
-    @required int subcategoryId,
-    int userId,
-    int orgId,
-    int groupId,
-    String reference,
-    String status,
-    String kind,
-    String userPic,
-    String userName,
-    String name,
-    String nameEn,
-    String nameLocal,
-    String photo,
-    String address,
-    double latitude,
-    double longitude,
-    String province,
-    String city,
-    String district,
-    @required String shortDescription,
-    @required String shortDescriptionEn,
-    String link,
-    String sustainabilityRating,
-    String impressionsCount,
-    String terms,
-    String measure,
-    String paymentClass,
-    double currency,
-    double currencyPrice,
-    double maximumPrice,
-    double minimumPrice,
-    double quantity,
-    String urgency,
-    String state,
-    String featured,
-    String createdAt,
-    String updatedAt,
-    String deletedAt,
-    String gender,
-    String email,
-    String mobile,
-    String provider,
-    String uid,
-    String logistics,
-  }) async {
+  insertProduct(Database db,
+      {@required int categoryId,
+      @required int subcategoryId,
+      int userId,
+      int orgId,
+      int groupId,
+      String reference,
+      String status,
+      String kind,
+      String userPic,
+      String userName,
+      String name,
+      String nameEn,
+      String nameLocal,
+      String photo,
+      String address,
+      double latitude,
+      double longitude,
+      String province,
+      String city,
+      String district,
+      @required String shortDescription,
+      @required String shortDescriptionEn,
+      String link,
+      String sustainabilityRating,
+      String impressionsCount,
+      String terms,
+      String measure,
+      String paymentClass,
+      double currency,
+      double currencyPrice,
+      double maximumPrice,
+      double minimumPrice,
+      double quantity,
+      String urgency,
+      String state,
+      String featured,
+      String createdAt,
+      String updatedAt,
+      String deletedAt,
+      String gender,
+      String email,
+      String mobile,
+      String provider,
+      String uid,
+      String logistics,
+      String breedPlantDate,
+      String targetHarvestSellDate}) async {
     return await db.transaction((txn) async {
       Batch batch = txn.batch();
       batch.insert(DbConstants.PRODUCT_TABLE, {
@@ -302,6 +335,8 @@ class DbHelper {
         COL_URGENCY: urgency,
         COL_CREATED_AT: createdAt,
         COL_UPDATED_AT: updatedAt,
+        COL_BREED_PLANT_DATE: breedPlantDate,
+        COL_TARGET_HARVEST_SELL_DATE: targetHarvestSellDate
       });
       return await batch.commit();
     });

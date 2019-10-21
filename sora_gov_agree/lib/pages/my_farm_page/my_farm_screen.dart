@@ -6,14 +6,19 @@ class MyFarmScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = BlocProvider.of<MyFarmBloc>(context).products;
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text("${products[index].name}"),
-          subtitle: Text("${products[index].shortDescription}"),
-        );
-      },
-      itemCount: products.length,
+    return Scaffold(
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text("${products[index].name}"),
+            subtitle: Text("${products[index].shortDescription}"),
+          );
+        },
+        itemCount: products.length,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add), onPressed: () {},
+      ),
     );
   }
 }

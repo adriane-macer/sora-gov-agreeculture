@@ -42,12 +42,8 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
     minimumPrice: (json['minimum_price'] as num)?.toDouble(),
     quantity: (json['quantity'] as num)?.toDouble(),
     urgency: json['urgency'] as int,
-    createdAt: json['created_at'] == null
-        ? null
-        : DateTime.parse(json['created_at'] as String),
-    updatedAt: json['updated_at'] == null
-        ? null
-        : DateTime.parse(json['updated_at'] as String),
+    createdAt: json['created_at'] as String,
+    updatedAt: json['updated_at'] as String,
   );
 }
 
@@ -86,6 +82,6 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'minimum_price': instance.minimumPrice,
       'quantity': instance.quantity,
       'urgency': instance.urgency,
-      'created_at': instance.createdAt?.toIso8601String(),
-      'updated_at': instance.updatedAt?.toIso8601String(),
+      'created_at': instance.createdAt,
+      'updated_at': instance.updatedAt,
     };

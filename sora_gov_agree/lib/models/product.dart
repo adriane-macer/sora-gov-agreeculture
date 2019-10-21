@@ -5,7 +5,9 @@ part 'product.g.dart';
 @JsonSerializable()
 class Product {
   Product(
-      {this.categoryId,
+      {this.breedPlantDate,
+      this.targetHarvestSell,
+      this.categoryId,
       this.subcategoryId,
       this.userId,
       this.orgId,
@@ -94,9 +96,13 @@ class Product {
   final double quantity;
   final int urgency;
   @JsonKey(name: "created_at")
-  final DateTime createdAt;
+  final String createdAt;
   @JsonKey(name: "updated_at")
-  final DateTime updatedAt;
+  final String updatedAt;
+  @JsonKey(name: "breed_plant_date")
+  final breedPlantDate;
+  @JsonKey(name: "target_harvest_sell")
+  final targetHarvestSell;
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
