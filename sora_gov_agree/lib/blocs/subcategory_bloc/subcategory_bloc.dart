@@ -20,7 +20,8 @@ class SubcategoryBloc extends Bloc<SubcategoryEvent, SubcategoryState> {
       yield SubcategoryLoading();
       try {
         Future.delayed(Duration(seconds: 3));
-        _subcategories = await locator<SubcategoryService>().getLocalData();
+        _subcategories =
+            await locator<SubcategoryService>().getLocalData(event.categoryId);
         yield SubcategoryLoaded();
       } catch (e) {
         print(e);
@@ -33,7 +34,7 @@ class SubcategoryBloc extends Bloc<SubcategoryEvent, SubcategoryState> {
           name: event.name, symbol: event.symbol, categoryId: event.categoryId);
 
       if (result) {
-        dispatch(FetchSubcategory());
+        dispatch(FetchSubcategory(event.categoryId));
       }
     }
   }

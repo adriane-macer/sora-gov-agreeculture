@@ -8,8 +8,6 @@ import 'package:sora_gov_agree/blocs/subcategory_bloc/subcategory_bloc.dart';
 import 'package:sora_gov_agree/blocs/subcategory_bloc/subcategory_event.dart';
 import 'package:sora_gov_agree/models/category.dart';
 import 'package:sora_gov_agree/pages/category_page/category_edit_screen.dart';
-import 'package:sora_gov_agree/services/category_service.dart';
-import 'package:sora_gov_agree/services/service_locator.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -34,8 +32,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       return MultiProvider(providers: [
                         Provider<Category>.value(value: categories[index]),
                         BlocProvider<SubcategoryBloc>(
-                          builder: (context) =>
-                              SubcategoryBloc()..dispatch(FetchSubcategory()),
+                          builder: (context) => SubcategoryBloc()
+                            ..dispatch(FetchSubcategory(categories[index].id)),
                         )
                       ], child: CategoryEditScreen());
                     },

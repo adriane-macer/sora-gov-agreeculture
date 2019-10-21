@@ -7,6 +7,11 @@ abstract class SubcategoryEvent extends Equatable {
 }
 
 class FetchSubcategory extends SubcategoryEvent {
+
+  final categoryId;
+
+  FetchSubcategory(this.categoryId);
+
   @override
   String toString() => 'FetchSubcategory';
 

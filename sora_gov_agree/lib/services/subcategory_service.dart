@@ -5,10 +5,10 @@ import 'package:sqflite/sqflite.dart';
 
 class SubcategoryService {
 
-  Future<List<Subcategory>> getLocalData() async {
+  Future<List<Subcategory>> getLocalData(int categoryId) async {
     DbHelper dbHelper = DbHelper.instance;
     Database db = await dbHelper.getDb();
-    final result = await dbHelper.getCategories(db);
+    final result = await dbHelper.getSubcategories(db, categoryId: categoryId);
     try {
       return result.map((data) => Subcategory.fromJson(data)).toList();
     } catch (e) {

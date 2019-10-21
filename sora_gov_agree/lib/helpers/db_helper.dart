@@ -75,17 +75,18 @@ class DbHelper {
 
   Future _initializeDb() async {
     databasesPath = await getDatabasesPath();
-    path = join(databasesPath, '$_DB_FILENAME');
 
     // Make sure the directory exists
     try {
       await Directory(databasesPath).create(recursive: true);
     } catch (_) {}
 
-//    await getDb();
+
+    path = join(databasesPath, '$_DB_FILENAME');
 
     _db = await openDatabase(path,
         version: _DATABASE_VERSION, onCreate: _onCreate);
+    await getDb();
   }
 
   _onCreate(Database db, int version) async {
@@ -316,7 +317,7 @@ class DbHelper {
     });
   }
 
-  Future<List<Map>> getLocalData(Database db,
+  Future<List<Map>> getSubcategories(Database db,
       {String name, String symbol, int categoryId}) async {
     return await db.transaction((txn) async {
       final result = await txn.rawQuery(
@@ -326,3 +327,4 @@ class DbHelper {
     });
   }
 }
+
