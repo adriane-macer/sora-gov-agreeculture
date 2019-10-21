@@ -73,7 +73,6 @@ class DbHelper {
   static final DbHelper instance = DbHelper._privateConstructor();
 
   Future _initializeDb() async {
-
     databasesPath = await getDatabasesPath();
     path = join('$databasesPath', '$_DB_FILENAME');
 
@@ -84,7 +83,6 @@ class DbHelper {
 
     _db = await openDatabase(path,
         version: _DATABASE_VERSION, onCreate: _onCreate);
-
   }
 
   _onCreate(Database db, int version) async {
@@ -98,7 +96,7 @@ class DbHelper {
       await _lock.synchronized(() async {
         // Check again once entering the synchronized block
         if (_db == null) {
-          if(path==null){
+          if (path == null) {
             databasesPath = await getDatabasesPath();
             path = join('$databasesPath', '$_DB_FILENAME');
           }
@@ -218,8 +216,7 @@ class DbHelper {
   }
 
   insertProduct(
-    Database db,
-    String tableName, {
+    Database db, {
     @required int categoryId,
     @required int subcategoryId,
     int userId,
@@ -240,8 +237,8 @@ class DbHelper {
     String province,
     String city,
     String district,
-    String shortDescription,
-    String shortDescriptionEn,
+    @required String shortDescription,
+    @required String shortDescriptionEn,
     String link,
     String sustainabilityRating,
     String impressionsCount,
@@ -268,7 +265,7 @@ class DbHelper {
   }) async {
     return await db.transaction((txn) async {
       Batch batch = txn.batch();
-      batch.insert(tableName, {
+      batch.insert(DbConstants.PRODUCT_TABLE, {
         COL_CATEGORY_ID: categoryId,
         COL_SUBCATEGORY_ID: subcategoryId,
         COL_USER_ID: userId,
@@ -327,5 +324,10 @@ class DbHelper {
       return result;
     });
   }
-}
 
+  Future<List<Map>> getProducts(Database db) async {
+    return await db.transaction((txn) async {
+      return await txn.rawQuery('SELECT * FROM ${DbConstants.PRODUCT_TABLE}');
+    });
+  }
+}
