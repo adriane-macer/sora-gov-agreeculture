@@ -13,19 +13,19 @@ class DbHelper {
   static final columnName = 'name';
   static final columnAge = 'age';
 
-  static const COL_CATEGORY_ID = "categoryId";
-  static const COL_SUBCATEGORY_ID = "subcategoryId";
-  static const COL_USER_ID = "userId";
-  static const COL_ORG_ID = "orgId";
-  static const COL_GROUP_ID = "groupId";
+  static const COL_CATEGORY_ID = "category_id";
+  static const COL_SUBCATEGORY_ID = "subcategory_id";
+  static const COL_USER_ID = "user_id";
+  static const COL_ORG_ID = "org_id";
+  static const COL_GROUP_ID = "group_id";
   static const COL_REFERENCE = "reference";
   static const COL_STATUS = "status";
   static const COL_KIND = "kind";
   static const COL_USER_PIC = "userPic";
-  static const COL_USER_NAME = "userName";
+  static const COL_USER_NAME = "user_name";
   static const COL_NAME = "name";
-  static const COL_NAME_EN = "nameEn";
-  static const COL_NAME_LOCAL = "nameLocal";
+  static const COL_NAME_EN = "name_en";
+  static const COL_NAME_LOCAL = "name_local";
   static const COL_PHOTO = "photo";
   static const COL_ADDRESS = "address";
   static const COL_LATITUDE = "latitude";
@@ -33,33 +33,33 @@ class DbHelper {
   static const COL_PROVINCE = "province";
   static const COL_CITY = "city";
   static const COL_DISTRICT = "district";
-  static const COL_SHORT_DESCRIPTION = "shortDescription";
-  static const COL_SHORT_DESCRIPTION_EN = "shortDescriptionEn";
+  static const COL_SHORT_DESCRIPTION = "short_description";
+  static const COL_SHORT_DESCRIPTION_EN = "short_description_en";
   static const COL_LINK = "link";
-  static const COL_SUSTAINABILITY_RATING = "sustainabilityRating";
-  static const COL_IMPRESSIONS_COUNT = "impressionsCount";
+  static const COL_SUSTAINABILITY_RATING = "sustainability_rating";
+  static const COL_IMPRESSIONS_COUNT = "impressions_count";
   static const COL_TERMS = "terms";
   static const COL_MEASURE = "measure";
-  static const COL_PAYMENT_CLASS = "paymentClass";
+  static const COL_PAYMENT_CLASS = "payment_class";
   static const COL_CURRENCY = "currency";
-  static const COL_CURRENCY_PRICE = "currencyPrice";
-  static const COL_MAXIMUM_PRICE = "maximumPrice";
-  static const COL_MINIMUM_PRICE = "minimumPrice";
+  static const COL_CURRENCY_PRICE = "currency_price";
+  static const COL_MAXIMUM_PRICE = "maximum_price";
+  static const COL_MINIMUM_PRICE = "minimum_price";
   static const COL_QUANTITY = "quantity";
   static const COL_URGENCY = "urgency";
   static const COL_STATE = "state";
   static const COL_FEATURED = "featured";
-  static const COL_CREATED_AT = "createdAt";
-  static const COL_UPDATED_AT = "updatedAt";
-  static const COL_DELETED_AT = "deletedAt";
+  static const COL_CREATED_AT = "created_at";
+  static const COL_UPDATED_AT = "updated_at";
+  static const COL_DELETED_AT = "deleted_at";
   static const COL_GENDER = "gender";
   static const COL_EMAIL = "email";
   static const COL_MOBILE = "mobile";
   static const COL_PROVIDER = "provider";
   static const COL_UID = "uid";
   static const COL_LOGISTICS = "logistics";
-  static const COL_BREED_PLANT_DATE = "breedPlantdate";
-  static const COL_TARGET_HARVEST_SELL_DATE = "targetHarvestSellDate";
+  static const COL_BREED_PLANT_DATE = "breed_plant_date";
+  static const COL_TARGET_HARVEST_SELL_DATE = "target_harvest_sell_date";
 
   static const COL_SYMBOL = "symbol";
 
@@ -270,7 +270,7 @@ class DbHelper {
       String city,
       String district,
       @required String shortDescription,
-      @required String shortDescriptionEn,
+      String shortDescriptionEn,
       String link,
       String sustainabilityRating,
       String impressionsCount,
@@ -350,12 +350,20 @@ class DbHelper {
     });
   }
 
-  Future<List<Map>> getSubcategories(Database db,
-      {String name, String symbol, int categoryId}) async {
+  Future<List<Map>> getSubcategoriesByCategory(Database db,
+      {@required int categoryId}) async {
     return await db.transaction((txn) async {
       final result = await txn.rawQuery(
           'SELECT * FROM ${DbConstants.SUB_CATEGORY_TABLE} WHERE $COL_CATEGORY_ID IN (?)',
           [categoryId]);
+      return result;
+    });
+  }
+
+  Future<List<Map>> getSubcategories(Database db) async {
+    return await db.transaction((txn) async {
+      final result =
+          await txn.rawQuery('SELECT * FROM ${DbConstants.SUB_CATEGORY_TABLE}');
       return result;
     });
   }

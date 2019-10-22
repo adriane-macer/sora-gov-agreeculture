@@ -8,6 +8,7 @@ class ProductService {
     DbHelper dbHelper = DbHelper.instance;
     Database db = await dbHelper.getDb();
     final result = await dbHelper.getProducts(db);
+    print(result);
     try {
       return result.map((data) => Product.fromJson(data)).toList();
     } catch (e) {
@@ -18,23 +19,26 @@ class ProductService {
 
   Future<bool> insertProduct({
     @required String name,
-    @required String symbol,
     @required categoryId,
     @required subCategoryId,
-    @required shortDescriptionEn,
+    shortDescriptionEn,
     @required shortDescription,
+    city,
+    breedPlantDate,
+    targetHarvestSellDate,
   }) async {
     try {
       DbHelper dbHelper = DbHelper.instance;
       Database db = await dbHelper.getDb();
-      await dbHelper.insertProduct(
-        db,
-        name: name,
-        shortDescriptionEn: shortDescriptionEn,
-        categoryId: categoryId,
-        shortDescription: shortDescription,
-        subcategoryId: subCategoryId,
-      );
+      await dbHelper.insertProduct(db,
+          name: name,
+          shortDescriptionEn: shortDescriptionEn,
+          categoryId: categoryId,
+          shortDescription: shortDescription,
+          subcategoryId: subCategoryId,
+          city: city,
+          breedPlantDate: breedPlantDate,
+          targetHarvestSellDate: targetHarvestSellDate);
       return true;
     } catch (e) {
       print(e);

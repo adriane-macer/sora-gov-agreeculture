@@ -7,7 +7,6 @@ abstract class MyFarmEvent extends Equatable {
 }
 
 class FetchMyFarm extends MyFarmEvent {
-
   @override
   String toString() => 'FetchMyFarm';
 
@@ -17,7 +16,6 @@ class FetchMyFarm extends MyFarmEvent {
 }
 
 class RefreshMyFarm extends MyFarmEvent {
-
   @override
   String toString() => 'RefreshMyFarm';
 
@@ -26,4 +24,22 @@ class RefreshMyFarm extends MyFarmEvent {
   List<Object> get props => null;
 }
 
-//TODO: Add events
+class AddProduct extends MyFarmEvent {
+  final categoryId;
+  final subcategoryId;
+  final name;
+  final city;
+  final shortDescription;
+  final breedPlantDate;
+  final targetHarvestSellDate;
+
+  AddProduct({this.categoryId, this.subcategoryId, this.name, this.city,
+      this.shortDescription, this.breedPlantDate, this.targetHarvestSellDate});
+
+  @override
+  String toString() => 'AddProduct';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}

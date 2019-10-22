@@ -26,5 +26,24 @@ class MyFarmBloc extends Bloc<MyFarmEvent, MyFarmState> {
         yield MyFarmError(e);
       }
     }
+
+    if (event is AddProduct) {
+      try {
+        final result = await locator<ProductService>().insertProduct(
+          name: event.name,
+          categoryId: event.categoryId,
+          subCategoryId: event.subcategoryId,
+          shortDescription: event.shortDescription,
+          city: event.city,
+          breedPlantDate: event.breedPlantDate,
+          targetHarvestSellDate: event.targetHarvestSellDate,
+        );
+        if (result) {
+          dispatch(FetchMyFarm());
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 }

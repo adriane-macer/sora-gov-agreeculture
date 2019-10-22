@@ -21,7 +21,7 @@ class SubcategoryBloc extends Bloc<SubcategoryEvent, SubcategoryState> {
       try {
         Future.delayed(Duration(seconds: 3));
         _subcategories =
-            await locator<SubcategoryService>().getLocalData(event.categoryId);
+            await locator<SubcategoryService>().getSubcategoriesByCategoryLocal(event.categoryId);
         yield SubcategoryLoaded();
       } catch (e) {
         print(e);

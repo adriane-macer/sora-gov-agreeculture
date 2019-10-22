@@ -27,10 +27,9 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
         onPressed: () async {
           final Map result = await _addSubCategoryDialog(context, category);
           if (result != null) {
-            print(result);
             final bloc = BlocProvider.of<SubcategoryBloc>(context);
             bloc.dispatch(AddSubcategory(
-                result['name'], result['symbol'], result['categoryId']));
+                result['name'], result['symbol'], result['category_id']));
           }
         },
       ),
@@ -115,7 +114,7 @@ class _CategoryEditScreenState extends State<CategoryEditScreen> {
                 return;
               }
               var fieldsValue = _fbKey.currentState.value;
-              fieldsValue.putIfAbsent("categoryId", () => category.id);
+              fieldsValue.putIfAbsent("category_id", () => category.id);
               Navigator.pop(context, fieldsValue);
             },
             color: Colors.white,

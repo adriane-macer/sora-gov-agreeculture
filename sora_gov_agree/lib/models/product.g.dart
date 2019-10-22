@@ -8,6 +8,8 @@ part of 'product.dart';
 
 Product _$ProductFromJson(Map<String, dynamic> json) {
   return Product(
+    breedPlantDate: json['breed_plant_date'],
+    targetHarvestSellDate: json['target_harvest_sell_date'],
     categoryId: json['category_id'] as int,
     subcategoryId: json['subcategory_id'] as int,
     userId: json['user_id'] as int,
@@ -84,4 +86,6 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
       'urgency': instance.urgency,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
+      'breed_plant_date': instance.breedPlantDate,
+      'target_harvest_sell_date': instance.targetHarvestSellDate,
     };

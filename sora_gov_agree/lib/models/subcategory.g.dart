@@ -11,7 +11,7 @@ Subcategory _$SubcategoryFromJson(Map<String, dynamic> json) {
     json['id'],
     json['name'],
     json['symbol'],
-    json['categoryId'],
+    json['category_id'],
   );
 }
 
@@ -20,5 +20,5 @@ Map<String, dynamic> _$SubcategoryToJson(Subcategory instance) =>
       'id': instance.id,
       'name': instance.name,
       'symbol': instance.symbol,
-      'categoryId': instance.categoryId,
+      'category_id': instance.categoryId,
     };

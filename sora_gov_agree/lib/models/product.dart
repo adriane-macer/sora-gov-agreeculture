@@ -6,7 +6,7 @@ part 'product.g.dart';
 class Product {
   Product(
       {this.breedPlantDate,
-      this.targetHarvestSell,
+      this.targetHarvestSellDate,
       this.categoryId,
       this.subcategoryId,
       this.userId,
@@ -101,8 +101,8 @@ class Product {
   final String updatedAt;
   @JsonKey(name: "breed_plant_date")
   final breedPlantDate;
-  @JsonKey(name: "target_harvest_sell")
-  final targetHarvestSell;
+  @JsonKey(name: "target_harvest_sell_date")
+  final targetHarvestSellDate;
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);

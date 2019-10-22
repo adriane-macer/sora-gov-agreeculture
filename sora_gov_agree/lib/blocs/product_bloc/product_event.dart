@@ -26,4 +26,16 @@ class RefreshProduct extends ProductEvent {
   List<Object> get props => null;
 }
 
+class AddProduct extends ProductEvent {
+
+
+
+  @override
+  String toString() => 'AddProduct';
+
+  @override
+  // TODO: implement props
+  List<Object> get props => null;
+}
+
 //TODO: Add events

@@ -5,15 +5,27 @@ import 'package:sqflite/sqflite.dart';
 
 class SubcategoryService {
 
-  Future<List<Subcategory>> getLocalData(int categoryId) async {
+  Future<List<Subcategory>> getSubcategoriesByCategoryLocal(int categoryId) async {
     DbHelper dbHelper = DbHelper.instance;
     Database db = await dbHelper.getDb();
-    final result = await dbHelper.getSubcategories(db, categoryId: categoryId);
+    final result = await dbHelper.getSubcategoriesByCategory(db, categoryId: categoryId);
     try {
       return result.map((data) => Subcategory.fromJson(data)).toList();
     } catch (e) {
       print(e);
-      throw Exception("Error gathering categories");
+      throw Exception("Error gathering sucategories by category");
+    }
+  }
+
+  Future<List<Subcategory>> getSubCategories() async {
+    DbHelper dbHelper = DbHelper.instance;
+    Database db = await dbHelper.getDb();
+    final result = await dbHelper.getSubcategories(db);
+    try {
+      return result.map((data) => Subcategory.fromJson(data)).toList();
+    } catch (e) {
+      print(e);
+      throw Exception("Error gathering subcategories");
     }
   }
 

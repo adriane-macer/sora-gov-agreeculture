@@ -9,6 +9,7 @@ class Subcategory {
   final id;
   final name;
   final symbol;
+  @JsonKey(name: "category_id")
   final categoryId;
 
   factory Subcategory.fromJson(Map<String, dynamic> json) =>
