@@ -18,6 +18,35 @@ class MyFarmPage extends StatefulWidget {
 }
 
 class _MyFarmPageState extends State<MyFarmPage> {
+  List<Subcategory> _subcategoriesByCategory = [];
+  List<Category> _categories;
+
+  @override
+  initState() {
+    super.initState();
+    _formState = FormBuilder.of(context);
+    _formState?.registerFieldKey("subcategory_id", _fbSubcategoryKey);
+    _initKeys();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _formState?.unregisterFieldKey("subcategory_id");
+  }
+
+  Future _initKeys() async {
+    _categories = await locator<CategoryService>().getLocalData();
+    subcategories = await locator<SubcategoryService>().getSubCategories();
+  }
+
+  List<Subcategory> subcategories = [];
+  final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormFieldState> _fbSubcategoryKey =
+      GlobalKey<FormFieldState>();
+  FormBuilderState _formState;
+  String _subcategoryValue;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MyFarmBloc, MyFarmState>(
@@ -59,13 +88,6 @@ class _MyFarmPageState extends State<MyFarmPage> {
   }
 
   Future<Map> _addProductDialog(BuildContext context) async {
-    final List<Category> categories =
-        await locator<CategoryService>().getLocalData();
-    final List<Subcategory> subcategories =
-        await locator<SubcategoryService>().getSubCategories();
-    List<Subcategory> _subcategoriesByCategory = [];
-    final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-
     return await showDialog<Map>(
       context: context,
       builder: (context) => AlertDialog(
@@ -76,33 +98,78 @@ class _MyFarmPageState extends State<MyFarmPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  FormBuilderDropdown(
-                    attribute: "category_id",
-                    decoration: InputDecoration(labelText: "Category"),
-                    hint: Text('Select Category'),
-                    items: categories
-                        .map((category) => DropdownMenuItem(
-                            value: category.id,
-                            child: Text("${category.name}")))
-                        .toList(),
-//                    onChanged: (value) {
-//                      _fbKey.currentState.setState(() {
-//                        _subcategoriesByCategory = subcategories
-//                            .where((v) => v.categoryId == value)
-//                            .toList();
-//                      });
-//                    },
+                  FormField(builder: (FormFieldState<dynamic> field) {
+                    return FormBuilderDropdown(
+                      attribute: "category_id",
+                      decoration: InputDecoration(labelText: "Category"),
+                      hint: Text('Select Category'),
+                      items: _categories
+                          .map((category) => DropdownMenuItem(
+                              value: category.id,
+                              child: Text("${category.name}")))
+                          .toList(),
+                      onChanged: (value) {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        field.didChange(value);
+                        _formState?.setAttributeValue("subcategory_id", null);
+                        _subcategoriesByCategory = subcategories
+                            .where((v) => v.categoryId == value)
+                            .toList();
+                        _subcategoryValue = null;
+                        setState(
+                          () {},
+                        );
+                      },
+                    );
+                  }),
+                  SizedBox(
+                    height: 10.0,
                   ),
-                  FormBuilderDropdown(
-                    attribute: "subcategory_id",
-                    decoration: InputDecoration(
-                        labelText: "Subcategory", enabled: false),
-                    hint: Text('Select subategory'),
-                    items: subcategories.map((subcategory) {
-                      return DropdownMenuItem(
-                          value: subcategory.id,
-                          child: Text("${subcategory.name}"));
-                    }).toList(),
+                  FormField(
+                    key: _fbSubcategoryKey,
+                    enabled: true,
+                    validator: (val) => FormBuilderValidators.required()(val),
+                    onSaved: (val) {
+                      final Subcategory subcategory = val;
+                      _formState?.setAttributeValue(
+                          "subcategory_id", subcategory?.id ?? null);
+                    },
+                    builder: (FormFieldState<dynamic> field) {
+                      return Container(
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            errorText: field.errorText,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(0),
+                            labelText: "Subcategory",
+                          ),
+                          child: DropdownButton(
+                            elevation: 10,
+                            items: _subcategoriesByCategory.map((subcategory) {
+                              return DropdownMenuItem(
+                                  value: subcategory,
+                                  child: Text("${subcategory.name}"));
+                            }).toList(),
+                            onChanged: (value) {
+                              final Subcategory subcategory = value;
+                              _subcategoryValue = subcategory.name;
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              field.didChange(value);
+                              setState(() {});
+                            },
+                            underline: Divider(
+                              height: 3.0,
+                            ),
+                            hint: Text(
+                              _subcategoryValue == null
+                                  ? "Select subcategory"
+                                  : _subcategoryValue,
+                            ),
+                            isExpanded: true,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   FormBuilderTextField(
                     attribute: "name",
@@ -117,14 +184,12 @@ class _MyFarmPageState extends State<MyFarmPage> {
                   FormBuilderTextField(
                     attribute: "short_description",
                     decoration: InputDecoration(labelText: "Description"),
-//                  validators: [FormBuilderValidators.required()],
                   ),
                   FormBuilderDateTimePicker(
                     attribute: "breed_plant_date",
                     inputType: InputType.date,
                     decoration: InputDecoration(labelText: "Date plant/breed"),
                     validators: [FormBuilderValidators.required()],
-//                    onSaved: (date) => date?.toIso8601String(),
                   ),
                   FormBuilderDateTimePicker(
                     attribute: "target_harvest_sell_date",
@@ -132,7 +197,6 @@ class _MyFarmPageState extends State<MyFarmPage> {
                     decoration:
                         InputDecoration(labelText: "Target harvest/sell date"),
                     validators: [FormBuilderValidators.required()],
-//                    onSaved: (date) => date?.toIso8601String(),
                   ),
                 ],
               ),
@@ -163,6 +227,8 @@ class _MyFarmPageState extends State<MyFarmPage> {
                   fieldsValue["target_harvest_sell_date"];
               fieldsValue["target_harvest_sell_date"] =
                   targetHarvestSellDate?.toIso8601String();
+              _subcategoryValue = null;
+              _subcategoriesByCategory = [];
               Navigator.pop(context, fieldsValue);
             },
             color: Colors.white,
@@ -176,6 +242,8 @@ class _MyFarmPageState extends State<MyFarmPage> {
           FlatButton(
             child: Text('Cancel'),
             onPressed: () {
+              _subcategoryValue = null;
+              _subcategoriesByCategory = [];
               Navigator.pop(context, null);
             },
           ),
